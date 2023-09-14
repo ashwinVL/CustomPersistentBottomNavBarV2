@@ -1,9 +1,10 @@
 part of persistent_bottom_nav_bar_v2;
 
-Future<T?> pushNewScreen<T>(
+Future pushNewScreen<T>(
   BuildContext context, {
   required Widget screen,
   bool? withNavBar,
+  bool? replace,
   PageTransitionAnimation pageTransitionAnimation =
       PageTransitionAnimation.cupertino,
   PageRoute? customPageRoute,
@@ -11,9 +12,19 @@ Future<T?> pushNewScreen<T>(
   if (withNavBar == null) {
     withNavBar = true;
   }
-  return Navigator.of(context, rootNavigator: !withNavBar).push<T>(
+  if (replace == null) {
+    replace = false;
+  }
+  if(replace == true){
+    return Navigator.of(context, rootNavigator: !withNavBar).pushReplacement(
       customPageRoute as Route<T>? ??
           getPageRoute(pageTransitionAnimation, enterPage: screen));
+  }else{
+    return Navigator.of(context, rootNavigator: !withNavBar).push<T>(
+      customPageRoute as Route<T>? ??
+          getPageRoute(pageTransitionAnimation, enterPage: screen));
+  }
+  
 }
 
 Future<T?> pushDynamicScreen<T>(
